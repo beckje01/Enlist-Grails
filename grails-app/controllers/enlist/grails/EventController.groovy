@@ -6,6 +6,8 @@ import grails.plugins.springsecurity.Secured
 
 class EventController {
 
+	def springSecurityService
+
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index() {
@@ -110,4 +112,20 @@ class EventController {
             redirect(action: "show", id: id)
         }
     }
+
+	@Secured(['IS_AUTHENTICATED_FULLY'])
+	def volunteer(Long id)
+	{
+		def event = Event.get(id)
+		if(!event)
+		{
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'event.label', default: 'Event'), id])
+			return redirect(controller: 'user', action: "index")
+
+		}
+
+		def userInstance = springSecurityService.getCurrentUser()
+
+		return [userInstance:userInstance,event:event]
+	}
 }

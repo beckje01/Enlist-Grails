@@ -15,8 +15,7 @@ class UserController {
     def eventService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
-	
-	@Secured(['ROLE_ADMIN'])
+
     def index() {
         def userInstance = springSecurityService.getCurrentUser()
         def registeredEvents = eventService.getRegisteredEvents(userInstance)
